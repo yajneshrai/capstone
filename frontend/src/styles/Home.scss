@@ -1,0 +1,14 @@
+.fl {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  margin-top: 5rem;
+
+  div {
+    margin-top: 2rem;
+
+    img {
+      width: 300px;
+    }
+  }
+}

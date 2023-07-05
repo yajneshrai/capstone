@@ -1,0 +1,115 @@
+type Query {
+    categories: [QuizCategory!]!,
+    questions(categoryId: Int!, custom: Boolean, amount: Int!, difficulty: String!, type: String!): Quiz,
+    findUser(email: String!): User,
+    adminCategory(categoryId: Int!): AdminCategory,
+    adminCategories: [QuizCategory!]!,
+}
+
+type QuestionCount {
+    total: Int,
+    easy: Int,
+    medium: Int,
+    hard: Int
+}
+
+type DefaultCategory {
+    categoryId: ID!,
+    questionCount: QuestionCount
+}
+
+type AdminCategory {
+    category: QuizCategory,
+    default: DefaultCategory,
+    questions: [Question!]
+}
+
+type QuizCategory {
+    categoryId: ID!,
+    categoryName: String,
+    custom: Boolean,
+    enabled: Boolean,
+    addedOn: Date,
+    addedBy: String
+}
+
+type QuizOption {
+    optionId: ID,
+    option: String,
+    selected: Boolean,
+    correct: Boolean,
+}
+
+type Question {
+    questionId: ID!,
+    question: String!,
+    options: [QuizOption!]!
+}
+
+type Quiz {
+    category: QuizCategory,
+    preference: QuizPreference,
+    questions: [Question!]!
+}
+
+type QuizPreference {
+    amount: Int
+    difficulty: String,
+    type: String
+}
+
+type AttemptedQuiz {
+    category: QuizCategory!,
+    preference: QuizPreference,
+    score: Int!
+    date: Date
+}
+
+type User {
+    name: String!,
+    email: String!,
+    password: String,
+    role: String!,
+    attemptedQuizzes: [AttemptedQuiz!]
+}
+
+input Option {
+    optionId: ID,
+    option: String,
+    selected: Boolean,
+    correct: Boolean,
+}
+
+type Mutation {
+    login(email: String!, password: String!): LoginResponse,
+    signup(name: String!, email: String!, password: String!, role: String!): User,
+    submitQuiz(
+        email: String!,
+        categoryId: Int!,
+        categoryName: String,
+        amount: Int!,
+        difficulty: String!,
+        type: String!,
+        score: Int!
+        date: Date): UpdateResponse,
+    addCategory(categoryName: String!, addedOn: Date, addedBy: String): UpdateResponse,
+    addQuestion(
+        categoryId: Int!, 
+        categoryName: String!,
+        question: String!, 
+        options: [Option!]!,
+        difficulty: String!,
+        type: String!): UpdateResponse,
+    toggleCategoryActive(categoryId: Int!, categoryName: String, enabled: Boolean!): UpdateResponse
+} 
+
+type UpdateResponse {
+    success: Boolean
+}
+
+type LoginResponse {
+    userFound: Boolean!,
+    user: User
+}
+
+scalar Date
