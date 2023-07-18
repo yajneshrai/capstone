@@ -6,6 +6,7 @@ This is a quizzing app made using React, Node.js, GraphQL and MongoDB.
 
 1. Latest Node.js version
 2. MongoDB with database named `capstone`
+3. Install node dependencies by running `npm i` in both `frontend` and `backend` folders
 
 
 ## Steps to run the app
