@@ -4,7 +4,7 @@ This is a quizzing app made using React, Node.js, GraphQL and MongoDB.
 
 ## Prerequisites
 
-1. Node.js version >= 18.16.0
+1. Latest Node.js version
 2. MongoDB with database named `capstone`
 
 
