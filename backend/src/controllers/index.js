@@ -22,19 +22,26 @@ router.post('/login', async (req, res) => {
 router.put('/signup', async (req, res) => {
     const { name, email, password, role } = req.body;
     logger.info({ name, email, role }, 'REST API request: /signup');
-    const newUser = new User({
-        name,
-        email,
-        password,
-        role,
-        attemptedQuizzes: []
-    });
-    try {
-        const resp = await newUser.save();
-        res.send({ user: resp });
-    } catch (e) {
-        logger.info({ error: e }, 'REST API error: /signup');
-        res.status(500).send({ error: e, message: 'Signup failed!'});
+    
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+        logger.error({ email }, 'REST API error: User already exists');
+        res.send({ duplicateUser: true, user: null });
+    } else {
+        const newUser = new User({
+            name,
+            email,
+            password,
+            role,
+            attemptedQuizzes: []
+        });
+        try {
+            const resp = await newUser.save();
+            res.send({ user: resp });
+        } catch (e) {
+            logger.info({ error: e }, 'REST API error: /signup');
+            res.status(500).send({ error: e, message: 'Signup failed!'});
+        }
     }
 });
 

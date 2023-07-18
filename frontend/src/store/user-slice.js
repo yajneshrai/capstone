@@ -9,11 +9,35 @@ const userSlice = createSlice({
             email: '',
             role: '',
             attemptedQuizzes: []
-        }
+        },
+        error: {
+            authFailed: false,
+            userNotFound: false,
+            duplicateUser: false
+        },
     },
     reducers: {
         logIn(state, action) {
             state.isLoggedIn = true;
+            state.error = {
+                authFailed: false,
+            userNotFound: false,
+            duplicateUser: false
+            };
+            state.profile = {
+                name: action.payload.name,
+                email: action.payload.email,
+                role: action.payload.role,
+                attemptedQuizzes: action.payload.attemptedQuizzes || []
+            };
+        },
+        signUp(state, action) {
+            state.isLoggedIn = true;
+            state.error = {
+                authFailed: false,
+                userNotFound: false,
+                duplicateUser: false
+            };
             state.profile = {
                 name: action.payload.name,
                 email: action.payload.email,
@@ -21,13 +45,21 @@ const userSlice = createSlice({
                 attemptedQuizzes: action.payload.attemptedQuizzes || []
             }
         },
-        signUp(state, action) {
-            state.isLoggedIn = true;
-            state.profile = {
-                name: action.payload.name,
-                email: action.payload.email,
-                role: action.payload.role,
-                attemptedQuizzes: action.payload.attemptedQuizzes || []
+        setAuthFailed(state, action) {
+            state.error.authFailed = action.payload.authFailed;
+        },
+        loginFailed(state, action) {
+            if (action.payload?.userNotFound) {
+                state.userNotFound = true;
+            } else {
+                state.authFailed = true;
+            }
+        },
+        signupFailed(state, action) {
+            if (action.payload?.duplicateUser) {
+                state.duplicateUser = true;
+            } else {
+                state.authFailed = true;
             }
         },
         logOut(state, action) {

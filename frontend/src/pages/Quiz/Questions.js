@@ -52,7 +52,7 @@ const QuizQuestionsPage = () => {
     const difficulty = searchParams.get('difficulty');
     const type = searchParams.get('type');
 
-    const [skip, setSkip] = useState(false)
+    const [skip, setSkip] = useState(false);
     const [ questions, setQuestions ] = useState([]);
 
     const { loading, data } = useQuery(GET_QUESTIONS, { 

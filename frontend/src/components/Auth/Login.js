@@ -11,7 +11,8 @@ import {
     Input,
     Link,
     Stack,
-    Text
+    Text,
+    useToast
 } from "@chakra-ui/react";
 import { Field, Form, Formik } from 'formik';
 import { Link as RouterLink, useNavigate, useSearchParams } from "react-router-dom";
@@ -28,8 +29,11 @@ const Login = () => {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const toast = useToast();
 
     const isLoggedIn = useSelector(state => state.user.isLoggedIn);
+    const authFailed = useSelector(state => state.user.error.authFailed);
+    const userNotFound = useSelector(state => state.user.error.userNotFound);
 
     const validateEmail = (value) => {
         if (!value) {
@@ -51,7 +55,17 @@ const Login = () => {
                 navigate('/');
             }
         }
-    }, [isLoggedIn, navigate, redirectTo]);
+        if (authFailed) {
+            toast.closeAll();
+            toast({
+                title: 'Error',
+                description: userNotFound ? 'User not found!' : 'Login failed!',
+                status: 'error',
+                duration: 5000,
+                isClosable: true,
+            });
+        }
+    }, [isLoggedIn, navigate, redirectTo, authFailed, toast, userNotFound]);
 
     const submitHandler = (values, actions) => {
         dispatch(userLogin({

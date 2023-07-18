@@ -22,7 +22,7 @@ const AdminCategory = lazy(() => import('./pages/Admin/Category'));
 const NoMatch = lazy(() => import('./pages/NoMatch'));
 
 const App = () => {
-  const isLogged = useSelector(state => state.user.isLogged);
+  const isLoggedIn = useSelector(state => state.user.isLoggedIn);
 
   return (
     <>
@@ -32,7 +32,7 @@ const App = () => {
           <Routes>
             <Route path="/home" element={<Home />} />
             <Route path="/" element={<Navigate to='home' />} />
-            { !isLogged && <>
+            { isLoggedIn && <>
                 <Route path="/quiz/categories" element={<QuizCategories />} />
                 <Route path="/quiz" element={<Navigate to='categories' />}  />
                 <Route path="/quiz/:id" element={<QuizDetails />}></Route>
@@ -44,11 +44,8 @@ const App = () => {
                 <Route path="/admin/:id" element={<AdminCategory />} />
               </>
             }
-            { !isLogged && <>
-                <Route path="/login" element={<Login />} />
-                <Route path="/signup" element={<Signup />} />
-              </>
-            }
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
             <Route path="*" element={<NoMatch />} />
           </Routes>
         </Suspense>

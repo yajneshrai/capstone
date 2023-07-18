@@ -54,7 +54,7 @@ const User = () => {
                     <Center>
                         <Card minWidth='90rem' p='1rem' className="center"> 
                             { data.findUser.attemptedQuizzes.length > 0 && 
-                                <TableContainer className="score"minWidth='80rem' >
+                                <TableContainer className="score" minWidth='80rem' >
                                     <Table variant='simple'>
                                         <Thead>
                                             <Tr>
@@ -70,7 +70,7 @@ const User = () => {
                                         <Tbody>
                                             {
                                                 data.findUser.attemptedQuizzes.map((quiz, idx) => (
-                                                    <Tr key={ idx }>
+                                                    <Tr key={ idx } fontSize='md'>
                                                         <Td> { idx + 1 } </Td>
                                                         <Td> { quiz.date ? new Date(quiz.date).toLocaleDateString() : '' } </Td>
                                                         <Td> { quiz.category.categoryName } </Td>

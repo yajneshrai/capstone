@@ -12,19 +12,26 @@ import {
     Link,
     Select,
     Stack,
-    Text
+    Text,
+    useToast
 } from "@chakra-ui/react";
 import { Field, Form, Formik } from 'formik';
 
 import { Link as RouterLink, useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { userSignup } from "../../store/user-actions";
+import { useEffect } from "react";
 
 const Signup = () => {
     const initialValues = { name: '', email: '', password: '', confirmPassword: '', role: 'user' };
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const toast = useToast();
+
+    const isLoggedIn = useSelector(state => state.user.isLoggedIn);
+    const authFailed = useSelector(state => state.user.error.authFailed);
+    const duplicateUser = useSelector(state => state.user.error.duplicateUser);
 
     const validateName = (value) => {
         if (!value) {
@@ -53,16 +60,30 @@ const Signup = () => {
         }
     }
 
+    useEffect(() => {
+        if (isLoggedIn) {
+            navigate('/home');
+        }
+        if (authFailed) {
+            toast.closeAll();
+            toast({
+                title: 'Error',
+                description: duplicateUser ? 'User already exists!' : 'Signup failed!',
+                status: 'error',
+                duration: 5000,
+                isClosable: true,
+            });
+        }
+    }, [authFailed, duplicateUser, isLoggedIn, navigate, toast]);
+
     const submitHandler = (values, actions) => {
-        setTimeout(() => {
-            dispatch(userSignup({
-                email: values.email,
-                password: values.password,
-                role: values.role
-            }))
-            actions.setSubmitting(false);
-            navigate('/');
-          }, 1000);
+        dispatch(userSignup({
+            name: values.name,
+            email: values.email,
+            password: values.password,
+            role: values.role
+        }))
+        actions.setSubmitting(false);
     }
 
     return (
